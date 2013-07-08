@@ -206,18 +206,27 @@ class MainForm(QDialog):
         entryPriceLabel.setBuddy(self.entryPriceEdit)
 
         posValueLabel = QLabel("Position value: ")
-        self.posValueEdit = QDoubleSpinBox()
-        self.posValueEdit.setRange(0.00, 9999999)
-        self.posValueEdit.setValue(1000)
-        self.posValueEdit.setSingleStep(100)
+        self.posValueEdit = QLineEdit()
+        self.posValueEdit.setReadOnly(True)
+        self.posValueEdit.setEnabled(False)
         posValueLabel.setBuddy(self.posValueEdit)
 
         proportionLabel = QLabel("Proportion of portfolio (%): ")
-        self.proportionEdit = QDoubleSpinBox()
-        self.proportionEdit.setRange(0.00, 99.9)
-        self.proportionEdit.setValue(4)
-        self.proportionEdit.setSingleStep(0.25)
+        self.proportionEdit = QLineEdit()
+        self.proportionEdit.setReadOnly(True)
+        self.proportionEdit.setEnabled(False)
         proportionLabel.setBuddy(self.proportionEdit)
+
+        #
+        # Sub-group for read-only "position" values
+        #
+        layoutPos = QGridLayout()
+        layoutPos.addWidget(posValueLabel, 0, 0)
+        layoutPos.addWidget(self.posValueEdit, 0, 1)
+        layoutPos.addWidget(proportionLabel, 1, 0)
+        layoutPos.addWidget(self.proportionEdit, 1, 1)
+        self.groupPos = QGroupBox("Position")
+        self.groupPos.setLayout(layoutPos)
 
         qtyLabel = QLabel("Position quantity: ")
         self.qtyEdit = QSpinBox()
@@ -232,10 +241,7 @@ class MainForm(QDialog):
         layoutTrade.addWidget(self.groupStop, 1, 0, 3, 2)
         layoutTrade.addWidget(qtyLabel, 0, 2)
         layoutTrade.addWidget(self.qtyEdit, 0, 3)
-        layoutTrade.addWidget(posValueLabel, 1, 2)
-        layoutTrade.addWidget(self.posValueEdit, 1, 3)
-        layoutTrade.addWidget(proportionLabel, 2, 2)
-        layoutTrade.addWidget(self.proportionEdit, 2, 3)
+        layoutTrade.addWidget(self.groupPos, 1, 2, 3, 2)
 #        layoutTrade.addWidget(self., , , , )
 
         self.groupTrade = QGroupBox("Trade position")
@@ -326,8 +332,9 @@ class MainForm(QDialog):
         #print position_value, type(position_value)
         #print portfolio_value, type(portfolio_value)
         #print proportion, type(proportion)
-        self.posValueEdit.setValue(position_value)
-        self.proportionEdit.setValue(proportion)
+        self.posValueEdit.setText("%.2f" % position_value) 
+            #setValue(position_value)
+        self.proportionEdit.setText("%.2f" % proportion) #setValue(proportion)
 
     def updateCalc(self):
         self.stopDistEdit.setValue(float(self.pos.stop_distance))

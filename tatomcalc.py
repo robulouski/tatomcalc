@@ -22,7 +22,6 @@
 
 import os.path
 import sys
-
 sys.path.insert(0, '.')
 from tatom.calc.main import main
 main()

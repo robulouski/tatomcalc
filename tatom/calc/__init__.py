@@ -21,7 +21,7 @@
 
 APPLICATION_NAME = "Trade-A-Tron-O-Matic Calc"
 
-version_data = (0, 1, 0)
+version_data = (0, 1, 1)
 VERSION_STRING = "%d.%d.%d" % version_data
 __version__ = VERSION_STRING
 

@@ -36,7 +36,6 @@ class Position(object):
         self._entry = D(e)
         # we store stop loss price, calculate other variations from that.
         self._stop_price = D(0.75) * self._entry
-        print self._stop_price
         self.is_valid = True
 
     @property
@@ -63,7 +62,6 @@ class Position(object):
 
     @property
     def stop_price(self):
-        print "getting ", self._stop_price
         return self._stop_price
 
     @stop_price.setter
@@ -122,9 +120,19 @@ class Position(object):
         loss = self.stop_distance
         if loss == 0:
             return 0
-        print "Quantity: ", self._risk / loss
+        #print "Quantity: ", self._risk / loss
         return D(self._risk / loss).to_integral_value(
             rounding=decimal.ROUND_DOWN)
+
+    @quantity.setter
+    def quantity(self, value):
+        if isinstance(value, decimal.Decimal):
+            q = value
+        else:        
+            q = D(value)
+        if (q > 0):
+            self.stop_distance = D(self._risk / q).quantize(D('0.01'), 
+                                                   rounding=decimal.ROUND_DOWN)
 
     @property
     def total_value(self):

@@ -36,7 +36,7 @@ from tatom.calc import VERSION_STRING, APPLICATION_NAME
 from tatom.calc.portfolio import Portfolio
 from tatom.calc.position import Position
 
-g_debug = True
+g_debug = False
 
 class MainForm(QDialog):
 
@@ -57,7 +57,6 @@ class MainForm(QDialog):
 
         self.pos = Position(self.riskDollarEdit.value(),
                             self.entryPriceEdit.value())
-        self.updateDollarRisk()
 
         self.is_updating_port = True
         #self.stopPriceEdit.setValue(99.9)
@@ -85,9 +84,8 @@ class MainForm(QDialog):
 
         self.connect(self.qtyEdit, SIGNAL("valueChanged(int)"), 
                      self.changedQty)
-
-        #self.connect(buttonBox, SIGNAL("rejected()"),
-        #             self, SLOT("reject()"))
+        self.updateDollarRisk()
+#        self.updateCalc()
 
 
     def setupMenu(self):
@@ -148,8 +146,6 @@ class MainForm(QDialog):
         self.riskDollarEdit.setValue(0)
         self.riskDollarEdit.setSingleStep(100)
         riskDollarLabel.setBuddy(self.riskDollarEdit)
-
-        #buttonBox = QDialogButtonBox(QDialogButtonBox.Close)
 
         layoutPort = QHBoxLayout()
         layoutPort.addWidget(totalLabel, 0, Qt.AlignLeft)
@@ -323,18 +319,16 @@ class MainForm(QDialog):
         self.stopPriceEdit.setValue(float(self.pos.stop_price))
         self.is_updating_stop = False
 
-#    def updatePositionTotal(self):
-
     def changedQty(self):
+        if not self.is_updating_stop and not  self.is_updating_pos:
+            self.pos.quantity = self.qtyEdit.value()
+            self.stopPriceEdit.setValue(float(self.pos.stop_price))
+            #return
         position_value = float(self.pos.total_value)
         portfolio_value = float(self.totalEdit.value())
         proportion = position_value / portfolio_value * 100.0
-        #print position_value, type(position_value)
-        #print portfolio_value, type(portfolio_value)
-        #print proportion, type(proportion)
         self.posValueEdit.setText("%.2f" % position_value) 
-            #setValue(position_value)
-        self.proportionEdit.setText("%.2f" % proportion) #setValue(proportion)
+        self.proportionEdit.setText("%.2f" % proportion)
 
     def updateCalc(self):
         self.stopDistEdit.setValue(float(self.pos.stop_distance))

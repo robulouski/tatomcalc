@@ -34,7 +34,7 @@ from tatom.calc.ui.mainform import MainForm
 def main():
     try:
         import argparse
-        parser = argparse.ArgumentParser(description=
+        parser = argparse.ArgumentParser(description= APPLICATION_NAME + ': ' + 
             'A cross-platform position sizing calculator for traders.')
         parser.add_argument('-v', '--version', 
                             action='version', 
@@ -42,8 +42,8 @@ def main():
                                                VERSION_STRING))
         parser.parse_known_args()
     except ImportError:
-        # Just forget the whole thing if running a version of python 
-        # without argparse :(
+        # Just forget the whole command line argument parsing thing if
+        # running a version of python without argparse :(
         pass
 
     app = QApplication(sys.argv)

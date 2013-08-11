@@ -36,6 +36,7 @@ from tatom.calc import VERSION_STRING, APPLICATION_NAME
 from tatom.calc.portfolio import Portfolio
 from tatom.calc.position import Position
 
+#g_debug = True
 g_debug = False
 
 class MainForm(QDialog):
@@ -92,15 +93,15 @@ class MainForm(QDialog):
         self.menuBar = QMenuBar()
         fileExitAct = QAction("E&xit", self, shortcut="Ctrl+Q",
                 statusTip="Exit the application", triggered=self.close)
-        editCutAct = QAction("Copy portfolio", self,
+        editCopyPortAct = QAction("Copy portfolio", self, shortcut="F2",
                 statusTip="Copy portfolio values to clipboard",
-                triggered=self.unimplemented)
-        editCopyAct = QAction("Copy position", self,
+                triggered=self.copy_port)
+        editCopyPosAct = QAction("Copy position", self, shortcut="F3",
                 statusTip="Copy trade position values to the clipboard",
-                triggered=self.unimplemented)
-        editPasteAct = QAction("Copy all values", self,
+                triggered=self.copy_pos)
+        editCopyAllAct = QAction("Copy all values", self,  shortcut="F4",
                 statusTip="Copy all values to clipboard",
-                triggered=self.unimplemented)
+                triggered=self.copy_all)
         helpAboutAct = QAction("&About", self,
                 statusTip="Show the application's About box",
                 triggered=self.about)
@@ -110,9 +111,9 @@ class MainForm(QDialog):
         self.fileMenu.addAction(fileExitAct)
 
         self.editMenu = self.menuBar.addMenu("&Edit")
-        self.editMenu.addAction(editCutAct)
-        self.editMenu.addAction(editCopyAct)
-        self.editMenu.addAction(editPasteAct)
+        self.editMenu.addAction(editCopyPortAct)
+        self.editMenu.addAction(editCopyPosAct)
+        self.editMenu.addAction(editCopyAllAct)
         self.editMenu.addSeparator()
 
         self.helpMenu = self.menuBar.addMenu("&Help")
@@ -349,6 +350,29 @@ Copyright (c) 2012-2013</p>
 """
         QMessageBox.about(self, "About", about_text)
                           
+
+    def copy_port(self):
+        text = '%d\t%f\t%f\n' % (self.totalEdit.value(), 
+                                 self.riskPercentEdit.value(), 
+                                 self.riskDollarEdit.value())
+        QApplication.clipboard().setText(text);
+
+    def copy_pos(self):
+        text = '%f\t%f\t%d\t%s\n' % (self.entryPriceEdit.value(),
+                                     self.stopPriceEdit.value(),
+                                     self.qtyEdit.value(),
+                                     self.posValueEdit.text())
+        QApplication.clipboard().setText(text);
+
+    def copy_all(self):
+        text = '%d\t%f\t%f\t%f\t%f\t%d\t%s\n' % (self.totalEdit.value(), 
+                                                 self.riskPercentEdit.value(), 
+                                                 self.riskDollarEdit.value(),
+                                                 self.entryPriceEdit.value(),
+                                                 self.stopPriceEdit.value(),
+                                                 self.qtyEdit.value(),
+                                                 self.posValueEdit.text())
+        QApplication.clipboard().setText(text);
 
     def unimplemented(self):
         pass

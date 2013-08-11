@@ -208,6 +208,12 @@ class MainForm(QDialog):
         self.posValueEdit.setEnabled(False)
         posValueLabel.setBuddy(self.posValueEdit)
 
+        posDirLabel = QLabel("Direction: ")
+        self.posDirEdit = QLineEdit()
+        self.posDirEdit.setReadOnly(True)
+        self.posDirEdit.setEnabled(False)
+        posDirLabel.setBuddy(self.posDirEdit)
+
         proportionLabel = QLabel("Proportion of portfolio (%): ")
         self.proportionEdit = QLineEdit()
         self.proportionEdit.setReadOnly(True)
@@ -218,10 +224,12 @@ class MainForm(QDialog):
         # Sub-group for read-only "position" values
         #
         layoutPos = QGridLayout()
-        layoutPos.addWidget(posValueLabel, 0, 0)
-        layoutPos.addWidget(self.posValueEdit, 0, 1)
-        layoutPos.addWidget(proportionLabel, 1, 0)
-        layoutPos.addWidget(self.proportionEdit, 1, 1)
+        layoutPos.addWidget(posDirLabel, 0, 0)
+        layoutPos.addWidget(self.posDirEdit, 0, 1)
+        layoutPos.addWidget(posValueLabel, 1, 0)
+        layoutPos.addWidget(self.posValueEdit, 1, 1)
+        layoutPos.addWidget(proportionLabel, 2, 0)
+        layoutPos.addWidget(self.proportionEdit, 2, 1)
         self.groupPos = QGroupBox("Position")
         self.groupPos.setLayout(layoutPos)
 
@@ -258,9 +266,8 @@ class MainForm(QDialog):
         if self.is_updating_port:
             debug_trace("dollar risk: skipping")
             return
-        else:
-            self.is_updating_port = True
-            debug_trace("==== START: Dollar risk update")
+        self.is_updating_port = True
+        debug_trace("==== START: Dollar risk update")
         p = Portfolio("default", self.totalEdit.value())
         p.setRiskPercent(self.riskPercentEdit.value())
         self.pos.risk = p.getRiskDollar()
@@ -321,15 +328,21 @@ class MainForm(QDialog):
         self.is_updating_stop = False
 
     def changedQty(self):
-        if not self.is_updating_stop and not  self.is_updating_pos:
-            self.pos.quantity = self.qtyEdit.value()
-            self.stopPriceEdit.setValue(float(self.pos.stop_price))
+        if (not self.is_updating_stop and 
+            not self.is_updating_pos and 
+            not self.is_updating_port):
+                self.pos.quantity = self.qtyEdit.value()
+                self.stopPriceEdit.setValue(float(self.pos.stop_price))
             #return
         position_value = float(self.pos.total_value)
         portfolio_value = float(self.totalEdit.value())
         proportion = position_value / portfolio_value * 100.0
         self.posValueEdit.setText("%.2f" % position_value) 
         self.proportionEdit.setText("%.2f" % proportion)
+        if self.pos.stop_price > self.pos.entry:
+            self.posDirEdit.setText("SHORT")
+        else:
+            self.posDirEdit.setText("LONG")
 
     def updateCalc(self):
         self.stopDistEdit.setValue(float(self.pos.stop_distance))

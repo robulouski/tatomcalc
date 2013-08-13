@@ -35,6 +35,7 @@ from PySide.QtGui import *
 from tatom.calc import VERSION_STRING, APPLICATION_NAME
 from tatom.calc.portfolio import Portfolio
 from tatom.calc.position import Position
+import tatom.calc.ui.disclaimer
 
 #g_debug = True
 g_debug = False
@@ -86,8 +87,7 @@ class MainForm(QDialog):
         self.connect(self.qtyEdit, SIGNAL("valueChanged(int)"), 
                      self.changedQty)
         self.updateDollarRisk()
-#        self.updateCalc()
-
+        QTimer.singleShot(1, self.showDisclaimer)
 
     def setupMenu(self):
         self.menuBar = QMenuBar()
@@ -386,6 +386,10 @@ Copyright (c) 2012-2013</p>
                                                  self.qtyEdit.value(),
                                                  self.posValueEdit.text())
         QApplication.clipboard().setText(text);
+
+    def showDisclaimer(self):
+        dlg = tatom.calc.ui.disclaimer.DisclaimerForm(self)
+        dlg.exec_()
 
     def unimplemented(self):
         pass

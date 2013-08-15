@@ -2,17 +2,25 @@ Trade-A-Tron-O-Matic Calc
 =========================
 
 The Trade-A-Tron-O-Matic Calculator -- a simple position sizing calculator.
-Perfect for traders too lazy to fire up Excel and type in a simple formula!
+Perfect for traders who can't be bothered starting up Excel and typing in
+formulas!
+
 If you don't know what position sizing is then you probably don't need this
 application.  If you consider yourself a stock market trader and you don't
 know what position sizing is, you should probably consider reading Van
-Tharpe.
+Tharp.
 
 Trade-A-Tron-O-Matic Calc is an open-source cross-platform desktop
 application written in Python with PySide Qt bindings, so it should run on
 any OS with Python, Qt and PySide installed.  Just grab the source code,
 put it anywhere, then run tatomcalc.py.  There is no configuration or
 registry entries required.
+
+Alternatively, [binaries for some systems may be 
+avalailable here.](http://www.voidynullness.net/page/position-sizing-calculator/)
+
+http://www.voidynullness.net
+
 
 
 Obligatory Disclaimer:
